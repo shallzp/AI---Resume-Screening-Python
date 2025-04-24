@@ -1,0 +1,6 @@
+venv/
+.idea/
+**/.ipynb_checkpoints/
+models/**/*.pkl
+Notebooks/jobs_dataset_with_features.csv
+Notebooks/clean_resume_data.csv

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Category Prediction</title>
+
+    <style>
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #74ebd5;
+            background: -webkit-linear-gradient(to right, #ACB6E5, #74ebd5);
+            background: linear-gradient(to right, #ACB6E5, #74ebd5);
+            color: #333;
+            margin: 0;
+            padding: 50px 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: #283E51;
+            background: -webkit-linear-gradient(to right, #4B79A1, #283E51);
+            background: linear-gradient(to right, #4B79A1, #283E51);
+            color: white;
+            max-width: 75%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.7);
+        }
+
+        .text-center {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: square;
+            margin: 20px 0;
+        }
+
+        ul li {
+            margin: 5px 0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #ACB6E5;
+            color: white;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #74ebd5;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #ACB6E5;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #16325B;
+        }
+
+        .ex {
+            text-align: center;
+        }
+
+        .ex ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 90%;
+                padding: 15px;
+            }
+
+            input[type="file"], input[type="submit"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">Resume Screening AI Based System</h1>
+        <p>This system supports .txt and .pdf file formats for resume uploads and will assist with:</p>
+        <ul>
+            <li>Resume Categorization</li>
+            <li>Job Recommendations Based on Resume</li>
+            <li>Resume Parsing (Information Extraction)</li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h2 class="text-center">Upload Your Resume</h2>
+        <form action="/pred" method="post" enctype="multipart/form-data" aria-label="Resume Upload Form">
+            <input type="file" name="resume" accept=".pdf, .txt" required aria-label="Choose Resume File">
+            <input type="submit" value="Submit" aria-label="Submit Resume">
+        </form>
+
+        {% if message %}
+        <p class="text-center">{{message}}</p>
+        {% endif %}
+
+        <div class="loading">Processing, please wait...</div>
+    </div>
+
+    {% if predicted_category %}
+    <div class="container">
+        <p class="text-center"><strong>Category:</strong> {{predicted_category}}</p>
+        <p class="text-center"><strong>Recommended Job:</strong> {{recommended_job}}</p>
+    </div>
+
+    <div class="container ex">
+        <h1 class="text-center">Extracted Information</h1>
+        <p><strong>Name:</strong> {{name}}</p>
+        <p><strong>Phone Number:</strong> {{phone}}</p>
+        <p><strong>Email:</strong> {{email}}</p>
+
+        {% if extracted_education %}
+        <p><strong>Education:</strong></p>
+        <ul>
+            {% for education in extracted_education %}
+            <li>{{education}}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No Education found......</p>
+        {% endif %}
+
+        {% if extracted_skills %}
+        <p><strong>Skills:</strong></p>
+        <ul>
+            {% for skill in extracted_skills %}
+            <li>{{skill}}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No skills found......</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <script>
+        const form = document.querySelector('form');
+        const loading = document.querySelector('.loading');
+
+        form.addEventListener('submit', () => {
+            loading.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
